@@ -1,21 +1,55 @@
 import { Metadata } from 'next'
+import Hero from '@/components/ui/Hero'
+import NeighborhoodStats from '@/components/neighborhoods/NeighborhoodStats'
+import NeighborhoodFeatures from '@/components/neighborhoods/NeighborhoodFeatures'
 
 export const metadata: Metadata = {
-  title: 'Skout Homes - Find Your Perfect Home',
-  description: 'Discover your dream home with Skout Homes. Browse listings, connect with realtors, and find the perfect property.',
+  title: 'Skout Homes - Toronto & Richmond Hill Real Estate',
+  description: 'Find your perfect home in Toronto and Richmond Hill with Skout Homes. Expert real estate services, neighborhood guides, and property insights.',
 }
 
 export default function HomePage() {
+  const stats = {
+    averagePrice: 1250000,
+    medianPrice: 1150000,
+    totalListings: 234,
+    daysOnMarket: 15
+  }
+
+  const features = {
+    parks: [
+      'High Park',
+      'Richmond Green Sports Centre',
+      'Mill Pond Park'
+    ],
+    transit: [
+      'TTC Subway Access',
+      'GO Transit Station',
+      'YRT Bus Routes'
+    ],
+    schools: [
+      'Richmond Hill High School',
+      'Bayview Secondary',
+      'St. Theresa of Lisieux'
+    ],
+    shopping: [
+      'Hillcrest Mall',
+      'Richmond Hill Centre',
+      'Times Square'
+    ]
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm">
-        <h1 className="text-4xl font-bold text-center mb-8">
-          Welcome to Skout Homes
-        </h1>
-        <p className="text-center text-xl mb-8">
-          Your journey to finding the perfect home starts here
-        </p>
+    <>
+      <Hero 
+        title="Find Your Perfect Home"
+        subtitle="Discover exceptional properties in Toronto and Richmond Hill with expert guidance every step of the way."
+        type="city"
+      />
+      <div className="container mx-auto px-4 py-16">
+        <NeighborhoodStats stats={stats} />
+        <NeighborhoodFeatures features={features} />
       </div>
-    </main>
+    </>
   )
 } 
