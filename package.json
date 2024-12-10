@@ -1,0 +1,37 @@
+{
+  "name": "skout-homes",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.11",
+    "framer-motion": "^11.13.5",
+    "html-to-text": "^9.0.5",
+    "mapbox-gl": "^2.15.0",
+    "mongodb": "^6.3.0",
+    "next": "14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
+    "resend": "^2.0.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/html-to-text": "^9.0.4",
+    "@types/mapbox-gl": "^2.7.19",
+    "@types/node": "^20.10.4",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.17",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.55.0",
+    "eslint-config-next": "14.0.4",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.3.3"
+  }
+}
