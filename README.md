@@ -46,3 +46,18 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - getStaticProps
 - generateStaticParams
 - Server Components
+
+## Missing TypeScript definitions
+
+- Missing @types/node
+- Missing react-icons
+- Missing mapbox-gl
+- Missing proper React types
+
+## React type errors
+
+- Duplicate files in app/ and src/app/
+- Broken import paths (@/ aliases not working)
+- Inconsistent component locations
+
+## Environment variable type errors

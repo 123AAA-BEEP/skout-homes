@@ -1,0 +1,10 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Modern abstract house shape -->
+  <path d="M6 26V13L16 5L26 13V26H6Z" stroke="#2563EB" stroke-width="2" fill="none"/>
+  <!-- Letter S -->
+  <path d="M13 14C13 13.4477 13.4477 13 14 13H18C18.5523 13 19 13.4477 19 14V15C19 15.5523 18.5523 16 18 16H14C13.4477 16 13 16.4477 13 17V19C13 19.5523 13.4477 20 14 20H18C18.5523 20 19 19.5523 19 19" 
+    stroke="#2563EB" 
+    stroke-width="2" 
+    stroke-linecap="round"
+    fill="none"/>
+</svg> 

@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
   images: {
-    domains: ['images.unsplash.com'],
+    domains: ['images.unsplash.com'], // Add other image domains as needed
   },
-};
+  // Add other configuration options here
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig 
