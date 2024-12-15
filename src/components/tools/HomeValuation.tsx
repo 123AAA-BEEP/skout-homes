@@ -38,16 +38,20 @@ export default function HomeValuation() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Client: Starting home valuation submission...');
     
-    const leadData: LeadData = {
+    const leadData = {
+      name: formData.contact.name,
+      email: formData.contact.email,
+      phone: formData.contact.phone,
+      area: formData.address,
+      type: 'seller',
       source: 'home-valuation',
-      intent: 'sell',
-      contact: formData.contact,
-      location: {
-        address: formData.address
-      },
-      propertyDetails: formData.propertyDetails
+      status: 'new' as const,
+      createdAt: new Date(),
+      propertyType: formData.propertyDetails.type
     };
+    console.log('Client: Sending payload:', leadData);
 
     try {
       const response = await fetch('/api/leads', {
@@ -56,11 +60,24 @@ export default function HomeValuation() {
         body: JSON.stringify(leadData)
       });
 
-      if (response.ok) {
-        setStep(4); // Success step
+      console.log('Client: Response status:', response.status);
+      const data = await response.json();
+      console.log('Client: Response data:', data);
+
+      if (!response.ok) {
+        throw new Error(data.message || data.error || data.details || 'Failed to submit');
       }
-    } catch (error) {
-      console.error('Error submitting form:', error);
+
+      console.log('Client: Form submitted successfully');
+      setStep(4); // Success step
+    } catch (error: any) {
+      console.error('Client Error:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+      // Show error message to user
+      alert(error.message || 'Failed to submit form. Please try again.');
     }
   };
 

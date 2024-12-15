@@ -24,15 +24,19 @@ export default function AgentFinder() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Client: Starting agent finder submission...');
     
-    const leadData: LeadData = {
+    const leadData = {
+      name: formData.contact.name,
+      email: formData.contact.email,
+      phone: formData.contact.phone,
+      area: formData.location,
+      type: 'agent-search',
       source: 'agent-finder',
-      intent: formData.intent,
-      contact: formData.contact,
-      location: {
-        city: formData.location
-      }
+      status: 'new' as const,
+      createdAt: new Date()
     };
+    console.log('Client: Sending payload:', leadData);
 
     try {
       const response = await fetch('/api/leads', {
@@ -41,11 +45,24 @@ export default function AgentFinder() {
         body: JSON.stringify(leadData)
       });
 
-      if (response.ok) {
-        setStep(3); // Success step
+      console.log('Client: Response status:', response.status);
+      const data = await response.json();
+      console.log('Client: Response data:', data);
+
+      if (!response.ok) {
+        throw new Error(data.message || data.error || data.details || 'Failed to submit');
       }
-    } catch (error) {
-      console.error('Error submitting form:', error);
+
+      console.log('Client: Form submitted successfully');
+      setStep(3); // Success step
+    } catch (error: any) {
+      console.error('Client Error:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+      // Show error message to user
+      alert(error.message || 'Failed to submit form. Please try again.');
     }
   };
 

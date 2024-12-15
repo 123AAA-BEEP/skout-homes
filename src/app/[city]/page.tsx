@@ -7,6 +7,9 @@ import { Area } from '@/models/Area';
 import { getAreasByCity } from '@/lib/db/areas';
 import { LocalTrustIndicators } from '@/components/LocalTrustIndicators';
 import { LeadForm } from '@/components/ui/LeadForm';
+import PageHero from '@/components/ui/PageHero'
+import { FAQSection } from '@/components/FAQSection';
+import FAQPageSchema from '@/components/SEO/FAQPageSchema';
 
 interface CityPageProps {
   params: {
@@ -60,6 +63,54 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
   };
 }
 
+function generateCityFAQs(cityName: string, areas: Area[] = []) {
+  const cityDisplayName = cityName.charAt(0).toUpperCase() + cityName.slice(1);
+  
+  // Get unique features from areas
+  const uniqueFeatures = Array.from(
+    new Set(
+      areas
+        ?.flatMap(area => area.features || [])
+        ?.map(feature => feature.toLowerCase())
+    )
+  ).slice(0, 3);
+
+  // Get neighborhood names
+  const popularNeighborhoods = areas
+    ?.slice(0, 3)
+    ?.map(area => area.name)
+    || [];
+
+  const faqs = [
+    {
+      question: `What makes ${cityDisplayName} a great place to live?`,
+      answer: uniqueFeatures.length > 0
+        ? `${cityDisplayName} is known for its ${uniqueFeatures.join(', ')}. The city offers a perfect blend of urban amenities and comfortable living spaces, making it an ideal choice for both families and professionals.`
+        : `${cityDisplayName} offers a perfect blend of urban amenities and comfortable living spaces, making it an ideal choice for both families and professionals. With excellent schools, diverse communities, and growing job opportunities, it's a city that caters to various lifestyles.`
+    },
+    {
+      question: `What are the most popular neighborhoods in ${cityDisplayName}?`,
+      answer: popularNeighborhoods.length > 0
+        ? `Some of ${cityDisplayName}'s most sought-after neighborhoods include ${popularNeighborhoods.join(', ')}. Each area has its unique charm and amenities, catering to different lifestyles and preferences.`
+        : `${cityDisplayName} offers diverse neighborhoods to suit every lifestyle, from family-friendly suburban areas to vibrant urban communities. Connect with our local agents to find the perfect neighborhood for your needs.`
+    },
+    {
+      question: `How is the real estate market in ${cityDisplayName}?`,
+      answer: `The ${cityDisplayName} real estate market is dynamic and varies by neighborhood. Property values have shown steady growth, making it an attractive option for both homebuyers and investors. For the most current market analysis and trends, connect with our local real estate experts.`
+    },
+    {
+      question: `What should I consider when buying a home in ${cityDisplayName}?`,
+      answer: `When buying in ${cityDisplayName}, consider factors like proximity to transit, schools, and amenities. It's also important to understand local market conditions, property taxes, and future development plans. Our experienced local agents can guide you through these considerations and help you make an informed decision.`
+    },
+    {
+      question: `How can I find the best real estate agent in ${cityDisplayName}?`,
+      answer: `To find the best real estate agent in ${cityDisplayName}, look for someone with extensive local experience, positive client reviews, and deep knowledge of your target neighborhoods. Our platform connects you with pre-vetted, top-performing agents who specialize in ${cityDisplayName} real estate.`
+    }
+  ];
+
+  return faqs;
+}
+
 export default async function CityPage({ params }: CityPageProps) {
   const cityName = decodeURIComponent(params.city).toLowerCase();
   
@@ -74,125 +125,126 @@ export default async function CityPage({ params }: CityPageProps) {
   if (!areas || areas.length === 0) {
     console.log('No areas found for city:', cityName);
   }
+
+  // Generate FAQs using areas data
+  const cityFAQs = generateCityFAQs(cityDisplayName, areas);
   
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[80vh] min-h-[600px] bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1)_0%,rgba(0,0,0,0.1)_100%)]" />
-        </div>
-        <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center">
-          <div className="text-white max-w-2xl pt-20">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-              Find Your Perfect Agent in {cityDisplayName}
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-gray-200">
-              Connect with experienced local agents who know {cityDisplayName} inside and out. 
-              Get expert guidance for your real estate journey.
-            </p>
-            <LeadForm location={cityDisplayName} intent="connect" />
+    <>
+      <FAQPageSchema faqs={cityFAQs} />
+      <main>
+        <PageHero 
+          title={`Find Your Perfect Home in ${cityDisplayName}`}
+          subtitle="Discover the best properties and real estate agents in your area"
+        />
+        {/* Quick Actions */}
+        <section className="bg-white py-16">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Quick Action Cards */}
+              <QuickActionCard
+                icon={<UserGroupIcon />}
+                title="Find an Agent"
+                description="Connect with top local experts who understand your needs"
+                href="/find-realtor"
+              />
+              <QuickActionCard
+                icon={<HomeIcon />}
+                title="Free Home Evaluation"
+                description="Get a professional opinion on your home's current market value"
+                href="/tools/home-value-estimator"
+              />
+              <QuickActionCard
+                icon={<MapIcon />}
+                title="Area Guides"
+                description={`Explore detailed guides about ${cityDisplayName} neighborhoods`}
+                href="#areas"
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Quick Actions */}
-      <section className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Quick Action Cards */}
-            <QuickActionCard
-              icon={<UserGroupIcon />}
-              title="Find an Agent"
-              description="Connect with top local experts who understand your needs"
-              href="/find-realtor"
-            />
-            <QuickActionCard
-              icon={<HomeIcon />}
-              title="Free Home Evaluation"
-              description="Get a professional opinion on your home's current market value"
-              href="/tools/home-value-estimator"
-            />
-            <QuickActionCard
-              icon={<MapIcon />}
-              title="Area Guides"
-              description={`Explore detailed guides about ${cityDisplayName} neighborhoods`}
-              href="#areas"
-            />
+        {/* Trust Indicators */}
+        <section className="bg-gray-50 py-16">
+          <div className="max-w-7xl mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Why Work With Our Agents?</h2>
+            <LocalTrustIndicators />
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Trust Indicators */}
-      <section className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Why Work With Our Agents?</h2>
-          <LocalTrustIndicators />
-        </div>
-      </section>
-
-      {/* Neighborhood Grid */}
-      <section id="areas" className="py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12">Explore {cityDisplayName} Neighborhoods</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {areas && areas.length > 0 ? (
-              areas.map((area) => (
-                <NeighborhoodCard
-                  key={area.slug}
-                  area={area}
-                  cityName={cityName}
-                />
-              ))
-            ) : (
-              <div className="col-span-3 text-center py-12">
-                <p className="text-gray-500">No neighborhoods found for {cityDisplayName}.</p>
-              </div>
-            )}
+        {/* Neighborhood Grid */}
+        <section id="areas" className="py-16">
+          <div className="max-w-7xl mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-12">Explore {cityDisplayName} Neighborhoods</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {areas && areas.length > 0 ? (
+                areas.map((area) => (
+                  <NeighborhoodCard
+                    key={area.slug}
+                    area={area}
+                    cityName={cityName}
+                  />
+                ))
+              ) : (
+                <div className="col-span-3 text-center py-12">
+                  <p className="text-gray-500">No neighborhoods found for {cityDisplayName}.</p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Resources */}
-      <section className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12">Helpful Resources</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <ResourceCard
-              icon={<HomeIcon />}
-              title="Free Home Evaluation"
-              description="Get a professional opinion on your home's value"
-              href="/tools/home-value-estimator"
-            />
-            <ResourceCard
-              icon={<CalculatorIcon />}
-              title="Tax Calculator"
-              description="Estimate your land transfer tax"
-              href="/tools/land-transfer-tax-calculator"
-            />
-            <ResourceCard
-              icon={<ChartIcon />}
-              title="Market Reports"
-              description="Get the latest market insights"
-              href="#"
+        {/* Resources */}
+        <section className="bg-gray-50 py-16">
+          <div className="max-w-7xl mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-12">Helpful Resources</h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <ResourceCard
+                icon={<HomeIcon />}
+                title="Free Home Evaluation"
+                description="Get a professional opinion on your home's value"
+                href="/tools/home-value-estimator"
+              />
+              <ResourceCard
+                icon={<CalculatorIcon />}
+                title="Tax Calculator"
+                description="Estimate your land transfer tax"
+                href="/tools/land-transfer-tax-calculator"
+              />
+              <ResourceCard
+                icon={<ChartIcon />}
+                title="Market Reports"
+                description="Get the latest market insights"
+                href="#"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="bg-gray-50 py-16">
+          <div className="max-w-7xl mx-auto px-4">
+            <FAQSection 
+              faqs={cityFAQs}
+              className="mb-12"
             />
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Final CTA */}
-      <section className="py-16">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl p-12 text-center text-white">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Get Started?</h2>
-            <p className="text-xl text-primary-100 mb-8">
-              Connect with a {cityDisplayName} expert today and get the guidance you need.
-            </p>
-            <LeadForm location={cityDisplayName} intent="connect" />
+        {/* Final CTA */}
+        <section className="py-16">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl p-12 text-center text-white">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Get Started?</h2>
+              <p className="text-xl text-primary-100 mb-8">
+                Connect with a {cityDisplayName} expert today and get the guidance you need.
+              </p>
+              <LeadForm location={cityDisplayName} intent="connect" variant="transparent" />
+            </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </>
   );
 }
 

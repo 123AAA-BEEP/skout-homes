@@ -1,13 +1,17 @@
+'use client';
+
 import Link from 'next/link';
+
+interface FooterLink {
+  label: string;
+  href: string;
+}
 
 interface FooterSection {
   title: string;
   type: 'links';
   columns?: number;
-  items: Array<{
-    label: string;
-    href: string;
-  }>;
+  items: FooterLink[];
 }
 
 export default function Footer() {
@@ -58,36 +62,6 @@ export default function Footer() {
         {
           label: "Land Transfer Calculator",
           href: "/tools/land-transfer-tax-calculator"
-        },
-        {
-          label: "Market Reports",
-          href: "/market-reports"
-        },
-        {
-          label: "Professional Services",
-          href: "/professional-services"
-        }
-      ]
-    },
-    {
-      title: "Resources",
-      type: "links",
-      items: [
-        {
-          label: "Buying Guide",
-          href: "/guides/buying"
-        },
-        {
-          label: "Selling Guide",
-          href: "/guides/selling"
-        },
-        {
-          label: "Investment Guide",
-          href: "/guides/investing"
-        },
-        {
-          label: "Market Updates",
-          href: "/market-updates"
         }
       ]
     }
@@ -106,14 +80,14 @@ export default function Footer() {
     <footer className="w-full px-4 py-8 bg-gray-100 md:px-6 md:py-12" role="contentinfo">
       {/* Main Sections */}
       <div className="max-w-7xl mx-auto">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {sections.map((section, index) => (
-            <div key={index}>
+            <div key={index} className={section.title === "Popular Locations" ? "lg:col-span-2" : ""}>
               <h3 className="text-lg font-semibold mb-4" id={`footer-section-${index}`}>
                 {section.title}
               </h3>
               <div 
-                className={`grid ${section.columns === 2 ? 'grid-cols-2' : 'grid-cols-1'} gap-2`}
+                className={`grid ${section.columns === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'} gap-2`}
                 role="list"
                 aria-labelledby={`footer-section-${index}`}
               >
@@ -132,42 +106,39 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Legal Disclosure */}
-        <div className="text-sm text-gray-600 mt-8 px-4">
-          <h4 className="sr-only">Legal Disclosure</h4>
-          <p>
-            Disclosure: this website, and commentary herein are provided solely for the purpose to openly provide information to the public. The content of this website is for informational and conceptual purposes only. Prices, specifications, and architectural renderings are subject to change without notice. E. &O.E. Illustrations are artist's concept. The website is an open platform to share information to the public and does not provide any real estate, brokerage, appraisal, mortgage, legal or any other real property related services. Please consult a qualified professional before making any financial decisions. If you are dissatisfied with this website or with this agreement, your sole and exclusive remedy is to discontinue using this website. Please refer to our Privacy Policy and Legal Disclaimer for reference.
+        {/* Legal Text */}
+        <div className="mt-12 text-sm text-gray-600">
+          <p className="mb-4">
+            Disclosure: this website, and commentary herein are provided solely for the purpose to openly provide information to the public. 
+            The content of this website is for informational and conceptual purposes only. Prices, specifications, and architectural renderings 
+            are subject to change without notice. E. &O.E. Illustrations are artist's concept. The website is an open platform to share 
+            information to the public and does not provide any real estate, brokerage, appraisal, mortgage, legal or any other real property 
+            related services. Please consult a qualified professional before making any financial decisions. If you are dissatisfied with this 
+            website or with this agreement, your sole and exclusive remedy is to discontinue using this website. Please refer to our Privacy 
+            Policy and Legal Disclaimer for reference.
           </p>
-        </div>
-
-        {/* Broker Info */}
-        <div className="text-sm font-semibold mt-4 px-4">
-          <address className="not-italic">
-            Alex Karczewski | Broker | Orion Realty Corporation, Brokerage<br />
-            1149 Lakeshore Rd E, Mississauga ON L5E 1E8
-          </address>
+          <p className="font-semibold">
+            Alex Karczewski | Broker | Orion Realty Corporation, Brokerage | 1149 Lakeshore Rd E, Mississauga ON L5E 1E8
+          </p>
         </div>
 
         {/* Bottom Bar */}
         <div className="mt-8 pt-8 border-t border-gray-200">
-          <div className="flex flex-col md:flex-row justify-between items-center">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-600">
               © {currentYear} Skout Homes. All rights reserved.
             </p>
-            <nav 
-              className="flex gap-4 mt-4 md:mt-0" 
-              aria-label="Legal links"
-            >
+            <div className="flex flex-wrap gap-4 justify-center">
               {legalLinks.map((link, index) => (
                 <Link
                   key={index}
                   href={link.href}
-                  className="text-sm text-gray-600 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:underline"
+                  className="text-sm text-gray-600 hover:text-gray-900"
                 >
                   {link.label}
                 </Link>
               ))}
-            </nav>
+            </div>
           </div>
         </div>
       </div>

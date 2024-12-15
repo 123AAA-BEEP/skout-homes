@@ -5,6 +5,7 @@ import TrustIndicators from '@/components/home/TrustIndicators';
 import ToolsSection from '@/components/home/ToolsSection';
 import PopularSearches from '@/components/home/PopularSearches';
 import FeaturedAreas from '@/components/home/FeaturedAreas';
+import HomeFAQ from '@/components/home/HomeFAQ';
 import FloatingContact from '@/components/ui/FloatingContact';
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
       <ToolsSection />
       <PopularSearches />
       <FeaturedAreas />
+      <HomeFAQ />
       <FloatingContact />
     </>
   );

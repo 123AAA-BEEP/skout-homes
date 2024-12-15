@@ -3,75 +3,88 @@ import clientPromise from '@/lib/mongodb';
 import { Lead, validateLead } from '@/models/Lead';
 
 export async function POST(request: Request) {
+  console.log('API: Starting lead submission...');
+  
   try {
+    console.log('API: Parsing request body...');
     const data = await request.json();
+    console.log('API: Received data:', data);
     
-    // Create lead object
+    // Create lead object with all required fields
     const lead: Partial<Lead> = {
       name: data.name,
       email: data.email,
       phone: data.phone,
-      message: data.message,
-      area: data.area,
-      type: data.type || 'buyer', // Default to buyer if not specified
-      propertyType: data.propertyType,
-      urgency: data.urgency,
-      specialty: data.specialty,
+      area: data.area || 'Toronto',
+      type: data.type || 'connect',
+      status: 'new',
       createdAt: new Date(),
-      status: 'new'
+      source: data.source || 'website'
     };
+    console.log('API: Created lead object:', lead);
 
-    // Validate lead data
+    // Validate using Lead model validation
     const validation = validateLead(lead);
     if (!validation.isValid) {
-      console.error('Invalid lead data:', {
-        data,
-        errors: validation.errors
-      });
-      
+      console.log('API: Lead validation failed:', validation.errors);
       return NextResponse.json(
         { 
-          error: 'Invalid lead data',
-          details: validation.errors
+          error: 'Validation failed',
+          details: validation.errors.map(e => e.message).join(', ')
         },
         { status: 400 }
       );
     }
 
+    console.log('API: Attempting MongoDB connection...');
     // Connect to MongoDB
     const client = await clientPromise;
+    console.log('API: MongoDB connection successful');
+    
     const db = client.db(process.env.MONGODB_DB);
+    console.log('API: Selected database:', process.env.MONGODB_DB);
     
     // Insert into database
-    const result = await db.collection('leads').insertOne(lead as Lead);
+    console.log('API: Attempting to insert lead...');
+    const result = await db.collection('leads').insertOne(lead);
+    console.log('API: Insert result:', result);
 
     if (!result.insertedId) {
+      console.log('API: Insert failed - no insertedId');
       throw new Error('Failed to insert lead');
     }
-
-    // TODO: Add email notification here
-    // We should add a background job for this to avoid blocking the response
     
+    console.log('API: Lead successfully created');
     return NextResponse.json({ 
       success: true,
       leadId: result.insertedId,
       message: 'Lead successfully created'
     });
+
+  } catch (error: any) {
+    console.error('API Error:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
     
-  } catch (error) {
-    console.error('Error handling lead:', error);
-    
-    // Determine if it's a client error or server error
-    const isClientError = error instanceof Error && 
-      (error.message.includes('validation') || error.message.includes('invalid'));
+    // More specific error messages based on error type
+    if (error.name === 'MongoNetworkError') {
+      return NextResponse.json(
+        { 
+          error: 'Database connection error',
+          message: 'Unable to connect to database. Please try again.'
+        },
+        { status: 503 }
+      );
+    }
     
     return NextResponse.json(
       { 
-        error: isClientError ? 'Invalid request' : 'Internal server error',
-        message: isClientError ? error.message : 'An unexpected error occurred',
-        details: error instanceof Error ? error.message : undefined
+        error: 'Internal server error',
+        message: error.message || 'Failed to process lead. Please try again.'
       },
-      { status: isClientError ? 400 : 500 }
+      { status: 500 }
     );
   }
 } 

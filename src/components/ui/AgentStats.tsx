@@ -24,11 +24,11 @@ function StatItem({ value, label, description }: StatItemProps) {
   );
 }
 
-interface LocalTrustIndicatorsProps {
+interface AgentStatsProps {
   className?: string;
 }
 
-export function LocalTrustIndicators({ className }: LocalTrustIndicatorsProps) {
+export default function AgentStats({ className }: AgentStatsProps) {
   return (
     <div className={cn("py-12 px-4", className)}>
       <div className="max-w-7xl mx-auto">

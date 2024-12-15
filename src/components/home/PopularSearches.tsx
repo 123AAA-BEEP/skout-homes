@@ -5,17 +5,17 @@ const PopularSearches = () => {
     toronto: {
       title: "Popular Toronto Areas",
       links: [
-        { label: "Annex Real Estate Agents", href: "/toronto/annex/real-estate-agent" },
-        { label: "Yorkville Realtors", href: "/toronto/yorkville/real-estate-agent" },
-        { label: "Downtown Toronto Agents", href: "/toronto/downtown/real-estate-agent" }
+        { label: "High Park Real Estate", href: "/toronto/high-park/realtor" },
+        { label: "Liberty Village Real Estate", href: "/toronto/liberty-village/realtor" },
+        { label: "Bloor West Village Real Estate", href: "/toronto/bloor-west-village/realtor" }
       ]
     },
     services: {
       title: "Popular Services",
       links: [
-        { label: "Toronto Home Evaluation", href: "/toronto/home-evaluation" },
-        { label: "Mississauga Top Realtors", href: "/mississauga/top-realtor" },
-        { label: "First-Time Buyer Agents", href: "/first-time-buyer-agent" }
+        { label: "Top Realtors in Markland Wood", href: "/toronto/markland-wood/top-realtor" },
+        { label: "Find a Real Estate Agent", href: "/toronto/financial-district/realtor" },
+        { label: "Free Home Evaluation", href: "/tools/home-value-estimator" }
       ]
     }
   };

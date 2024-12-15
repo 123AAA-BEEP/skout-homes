@@ -13,38 +13,38 @@ const featuredAreas: AreaCard[] = [
   {
     name: "Downtown",
     description: "Luxury condos with stunning city views",
-    imageUrl: "https://images.unsplash.com/photo-1598928636135-d146006ff4be?w=800", // Modern condo interior
-    slug: "downtown"
+    imageUrl: "https://images.unsplash.com/photo-1598928636135-d146006ff4be?w=800",
+    slug: "/toronto/bay-street-corridor"
   },
   {
     name: "West End",
     description: "Character homes with modern renovations",
-    imageUrl: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800", // Modern kitchen interior
-    slug: "west-end"
+    imageUrl: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800",
+    slug: "/toronto/roncesvalles"
   },
   {
     name: "Riverside",
     description: "Contemporary living near the water",
-    imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800", // Modern house exterior
-    slug: "riverside"
-  },
-  {
-    name: "North York",
-    description: "Spacious family homes with great schools",
-    imageUrl: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=800", // Modern living room
-    slug: "north-york"
-  },
-  {
-    name: "East End",
-    description: "Charming homes in established neighborhoods",
-    imageUrl: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800", // Cozy dining room
-    slug: "east-end"
+    imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
+    slug: "/toronto/humber-bay"
   },
   {
     name: "Midtown",
     description: "Urban living with a neighborhood feel",
-    imageUrl: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800", // Modern bedroom
-    slug: "midtown"
+    imageUrl: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800",
+    slug: "/toronto/lawrence-park"
+  },
+  {
+    name: "North York",
+    description: "Spacious family homes with great schools",
+    imageUrl: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=800",
+    slug: "/toronto/bayview-village"
+  },
+  {
+    name: "East End",
+    description: "Charming homes in established neighborhoods",
+    imageUrl: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800",
+    slug: "/toronto/leslieville"
   }
 ];
 
@@ -57,7 +57,7 @@ const FeaturedAreas = () => {
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {featuredAreas.map((area) => (
-          <Link href={`/areas/${area.slug}`} key={area.slug} className="group">
+          <Link href={area.slug} key={area.slug} className="group">
             <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
               <div className="relative h-48 w-full">
                 <Image

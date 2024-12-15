@@ -8,6 +8,7 @@ import { LeadForm } from '@/components/ui/LeadForm';
 import { LocalAreaFeatures } from '@/components/LocalAreaFeatures';
 import { LocalTrustIndicators } from '@/components/LocalTrustIndicators';
 import { FAQSection } from '@/components/FAQSection';
+import PageHero from '@/components/ui/PageHero';
 
 interface NeighbourhoodPageProps {
   params: {
@@ -52,7 +53,11 @@ export default async function NeighbourhoodPage({ params }: NeighbourhoodPagePro
   ];
 
   return (
-    <main className="min-h-screen bg-white">
+    <main>
+      <PageHero 
+        title={`${neighbourhood} Real Estate`}
+        subtitle={`Explore homes and connect with top agents in ${neighbourhood}, ${city}`}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumbs items={breadcrumbs} />
         
