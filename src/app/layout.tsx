@@ -1,9 +1,9 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { SessionProvider } from "next-auth/react";
 import { headers } from "next/headers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { SessionProvider } from "@/components/providers/SessionProvider";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Script from 'next/script';
