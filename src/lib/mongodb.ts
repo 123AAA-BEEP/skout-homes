@@ -12,7 +12,11 @@ const options: MongoClientOptions = {
     version: '1',
     strict: true,
     deprecationErrors: true
-  }
+  },
+  tls: true,
+  tlsInsecure: false,
+  minTlsVersion: process.env.MONGODB_TLS_VERSION || 'TLS1_2',
+  maxTlsVersion: 'TLS1_3'
 };
 
 // Global MongoDB client promise
