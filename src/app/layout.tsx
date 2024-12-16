@@ -66,7 +66,7 @@ export default async function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <body className="font-sans antialiased">
-        <SessionProvider session={session}>
+        <SessionProvider session={session || null}>
           <Header />
           <main className="flex-grow">
             {children}

@@ -2,9 +2,15 @@
 
 import { SessionProvider as NextAuthSessionProvider } from "next-auth/react";
 
-export function SessionProvider({ children, session }: { children: React.ReactNode, session: any }) {
+export function SessionProvider({
+  children,
+  session
+}: {
+  children: React.ReactNode;
+  session: any;
+}) {
   return (
-    <NextAuthSessionProvider session={session}>
+    <NextAuthSessionProvider session={JSON.parse(JSON.stringify(session))}>
       {children}
     </NextAuthSessionProvider>
   );
