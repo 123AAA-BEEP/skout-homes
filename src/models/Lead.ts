@@ -14,6 +14,7 @@ export interface Lead {
   timestamp: Date;
   createdAt: Date;
   status: 'new' | 'contacted' | 'qualified' | 'converted' | 'closed';
+  source?: 'website' | 'hero-form' | 'contact-form' | 'other';
 }
 
 interface ValidationError {
