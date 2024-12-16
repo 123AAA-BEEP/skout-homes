@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { SessionProvider } from "next-auth/react";
 import { headers } from "next/headers";
 import { getServerSession } from "next-auth";
-import { handler } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Script from 'next/script';
@@ -52,7 +52,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(handler);
+  const session = await getServerSession(authOptions);
 
   return (
     <html lang="en">
