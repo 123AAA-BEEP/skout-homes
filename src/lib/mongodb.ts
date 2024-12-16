@@ -13,10 +13,13 @@ const options: MongoClientOptions = {
     strict: true,
     deprecationErrors: true
   },
-  directConnection: process.env.MONGODB_DIRECT_CONNECTION === 'true',
   ssl: true,
   tls: true,
-  tlsInsecure: false
+  tlsInsecure: false,
+  maxPoolSize: 10,
+  minPoolSize: 5,
+  connectTimeoutMS: 30000,
+  socketTimeoutMS: 45000
 };
 
 // Global MongoDB client promise
