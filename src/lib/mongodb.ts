@@ -14,13 +14,10 @@ const options: MongoClientOptions = {
   writeConcern: {
     w: 'majority'
   },
-  connectTimeoutMS: 10000,
+  connectTimeoutMS: 30000,
   socketTimeoutMS: 45000,
-  ssl: true,
   tls: true,
-  tlsAllowInvalidCertificates: false,
-  tlsAllowInvalidHostnames: false,
-  tlsCAFile: undefined,
+  tlsInsecure: false,
   serverApi: {
     version: '1',
     strict: true,
