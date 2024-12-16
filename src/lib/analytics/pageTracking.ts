@@ -9,6 +9,7 @@ interface PageView {
   intent?: string;
   userAgent?: string;
   referrer?: string;
+  serviceType?: string;
 }
 
 interface PagePerformance {
@@ -23,6 +24,7 @@ interface PagePerformance {
   neighborhood?: string;
   propertyType?: string;
   intent?: string;
+  serviceType?: string;
 }
 
 export async function trackPageView(data: Omit<PageView, 'timestamp'>) {
@@ -58,7 +60,8 @@ export async function trackPageView(data: Omit<PageView, 'timestamp'>) {
         city: data.city,
         neighborhood: data.neighborhood,
         propertyType: data.propertyType,
-        intent: data.intent
+        intent: data.intent,
+        serviceType: data.serviceType
       });
     }
   } catch (error) {
@@ -71,7 +74,7 @@ export async function getTopPerformingPages(options: {
   intent?: string;
   limit?: number;
   sortBy?: 'views' | 'uniqueViews' | 'avgTimeOnPage' | 'bounceRate';
-}) {
+}): Promise<PagePerformance[]> {
   try {
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_DB);
@@ -80,12 +83,14 @@ export async function getTopPerformingPages(options: {
     if (options.city) query.city = options.city;
     if (options.intent) query.intent = options.intent;
 
-    return db
+    const results = await db
       .collection('pagePerformance')
       .find(query)
       .sort({ [options.sortBy || 'views']: -1 })
       .limit(options.limit || 10)
       .toArray();
+      
+    return results as PagePerformance[];
   } catch (error) {
     console.error('Failed to get top performing pages:', error);
     return [];
@@ -97,7 +102,8 @@ export async function getPagePerformance(path: string): Promise<PagePerformance 
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_DB);
 
-    return db.collection('pagePerformance').findOne({ path });
+    const result = await db.collection('pagePerformance').findOne({ path });
+    return result as PagePerformance | null;
   } catch (error) {
     console.error('Failed to get page performance:', error);
     return null;
