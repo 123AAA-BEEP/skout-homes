@@ -28,15 +28,15 @@ function extractUrlParams(slug: string[]): {
     'investment-properties': 'invest',
     'homes-for-rent': 'rent',
     'real-estate-agents': 'agents'
-  };
+  } as const;
 
   let intent: string | undefined;
   let propertyType: string | undefined;
   let subIntent: string | undefined;
 
   // Check if last segment matches a URL pattern
-  if (lastSegment in intents) {
-    intent = intents[lastSegment];
+  if (lastSegment && lastSegment in intents) {
+    intent = intents[lastSegment as keyof typeof intents];
   }
 
   return { intent, propertyType, subIntent };
