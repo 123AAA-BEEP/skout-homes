@@ -73,6 +73,7 @@ export interface Area {
     description: string;
   }>;
   amenities?: string[];
+  propertyTypes?: string[];
   faqs?: Array<{
     question: string;
     answer: string;
