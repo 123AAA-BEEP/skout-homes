@@ -10,7 +10,16 @@ const options: MongoClientOptions = {
     version: '1',
     strict: true,
     deprecationErrors: true
-  }
+  },
+  ssl: true,
+  tls: true,
+  tlsAllowInvalidCertificates: true,
+  tlsInsecure: true,
+  directConnection: false,
+  retryWrites: true,
+  maxPoolSize: 10,
+  minPoolSize: 5,
+  connectTimeoutMS: 30000
 };
 
 let client: MongoClient;
