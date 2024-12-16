@@ -16,8 +16,11 @@ const options: MongoClientOptions = {
   },
   connectTimeoutMS: 30000,
   socketTimeoutMS: 45000,
-  tls: true,
-  tlsInsecure: false,
+  directConnection: false,
+  replicaSet: 'atlas-58u7aw-shard-0',
+  ssl: true,
+  authSource: 'admin',
+  serverSelectionTimeoutMS: 30000,
   serverApi: {
     version: '1',
     strict: true,
