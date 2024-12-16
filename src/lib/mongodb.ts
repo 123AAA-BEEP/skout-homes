@@ -16,9 +16,11 @@ const options: MongoClientOptions = {
   tlsAllowInvalidCertificates: true,
   directConnection: false,
   retryWrites: true,
-  maxPoolSize: 10,
-  minPoolSize: 5,
-  connectTimeoutMS: 30000
+  maxPoolSize: 1,
+  minPoolSize: 1,
+  maxIdleTimeMS: 10000,
+  connectTimeoutMS: 5000,
+  socketTimeoutMS: 5000
 };
 
 let client: MongoClient;
@@ -42,4 +44,4 @@ if (process.env.NODE_ENV === 'development') {
   clientPromise = client.connect();
 }
 
-export default clientPromise; 
+export default clientPromise;
