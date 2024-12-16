@@ -69,21 +69,20 @@ export default function AdminDashboard() {
               {leads.map((lead) => (
                 <tr key={lead._id?.toString()} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    {new Date(lead.timestamp).toLocaleDateString()}
+                    {new Date(lead.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    {lead.contact.name || 'N/A'}
+                    {lead.name || 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <div>{lead.contact.email}</div>
-                    <div className="text-gray-500">{lead.contact.phone}</div>
+                    <div>{lead.email}</div>
+                    <div className="text-gray-500">{lead.phone}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    {lead.intent}
+                    {lead.type}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    {lead.location.city}
-                    {lead.location.neighbourhood && ` - ${lead.location.neighbourhood}`}
+                    {lead.area}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 

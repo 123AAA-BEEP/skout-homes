@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 
 export interface Lead {
+  _id?: string;
   name: string;
   email: string;
   phone?: string;
@@ -10,6 +11,7 @@ export interface Lead {
   propertyType?: string;
   urgency?: 'standard' | 'soon' | 'urgent';
   specialty?: string;
+  timestamp: Date;
   createdAt: Date;
   status: 'new' | 'contacted' | 'qualified' | 'converted' | 'closed';
 }
