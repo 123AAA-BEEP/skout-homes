@@ -71,7 +71,7 @@ function generateCityFAQs(cityName: string, areas: Area[] = []) {
     new Set(
       areas
         ?.flatMap(area => area.features || [])
-        ?.map(feature => feature.toLowerCase())
+        ?.map(feature => feature.title.toLowerCase())
     )
   ).slice(0, 3);
 
