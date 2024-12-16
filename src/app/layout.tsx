@@ -3,10 +3,57 @@ import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Script from 'next/script';
+import localFont from "next/font/local";
+
+const geistSans = localFont({
+  src: "./fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+  weight: "100 900",
+});
+
+const geistMono = localFont({
+  src: "./fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+  weight: "100 900",
+});
 
 export const metadata: Metadata = {
-  title: 'Real Estate Website',
-  description: 'Find your perfect home',
+  title: {
+    default: "Skout Homes | Find Your Perfect Home",
+    template: "%s | Skout Homes"
+  },
+  description: "Find your perfect home with Skout Homes. Browse listings, connect with agents, and discover your dream property in your desired neighborhood.",
+  keywords: ["real estate", "homes", "property", "real estate agents", "house hunting", "property search"],
+  authors: [{ name: "Skout Homes" }],
+  creator: "Skout Homes",
+  metadataBase: new URL(process.env.NEXTAUTH_URL || 'http://localhost:3000'),
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: process.env.NEXTAUTH_URL,
+    title: 'Skout Homes | Find Your Perfect Home',
+    description: 'Find your perfect home with Skout Homes. Browse listings, connect with agents, and discover your dream property.',
+    siteName: 'Skout Homes',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Skout Homes | Find Your Perfect Home',
+    description: 'Find your perfect home with Skout Homes. Browse listings, connect with agents, and discover your dream property.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
 };
 
 export default function RootLayout({
@@ -16,7 +63,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="flex flex-col min-h-screen">
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <meta name="theme-color" content="#ffffff" />
+      </head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <Header />
         <main className="flex-grow">
           {children}
