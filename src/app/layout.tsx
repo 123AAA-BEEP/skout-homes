@@ -1,5 +1,9 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import { SessionProvider } from "next-auth/react";
+import { headers } from "next/headers";
+import { getServerSession } from "next-auth";
+import { handler } from "./api/auth/[...nextauth]/route";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Script from 'next/script';
@@ -43,11 +47,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(handler);
+
   return (
     <html lang="en">
       <head>
@@ -60,11 +66,13 @@ export default function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <body className="font-sans antialiased">
-        <Header />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
+        <SessionProvider session={session}>
+          <Header />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </SessionProvider>
         <Script id="schema-org" type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
