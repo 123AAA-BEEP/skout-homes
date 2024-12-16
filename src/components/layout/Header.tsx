@@ -110,7 +110,11 @@ export default function Header() {
                 <div 
                   key={index} 
                   className="relative" 
-                  ref={el => dropdownRefs.current[index] = el}
+                  ref={(el: HTMLDivElement | null) => {
+                    if (dropdownRefs.current) {
+                      dropdownRefs.current[index] = el;
+                    }
+                  }}
                   onKeyDown={e => handleDropdownKeyDown(e, index)}
                 >
                   <button

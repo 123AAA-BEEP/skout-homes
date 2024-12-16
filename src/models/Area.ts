@@ -37,12 +37,29 @@ export interface FAQ {
   answer: string;
 }
 
+// Highlight type
+export interface Highlight {
+  label: string;
+  value: string;
+  description: string;
+}
+
+// Feature type
+export interface Feature {
+  title: string;
+  description: string;
+}
+
 // Main Area interface
 export interface Area {
   name: string;
   slug: string;
   description: string;
   imageUrl: string;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
   urlStructure: {
     city: string;
     neighborhood: string;
@@ -57,27 +74,45 @@ export interface Area {
       invest?: IntentSEO;
       rent?: IntentSEO;
       agents?: IntentSEO;
+      agentSearch?: IntentSEO & {
+        specialties?: {
+          [key: string]: {
+            type: string;
+            description: string;
+          };
+        };
+        transactionType?: {
+          [key: string]: {
+            title: string;
+            description: string;
+            urlSlug: string;
+          };
+        };
+        languages?: {
+          [key: string]: {
+            type: string;
+            description: string;
+            urlSlug: string;
+          };
+        };
+        experience?: {
+          [key: string]: {
+            title: string;
+            description: string;
+          };
+        };
+      };
     };
     urlPatterns: {
       [key: string]: string;
     };
     structuredData?: Record<string, any>;
   };
-  highlights?: Array<{
-    label: string;
-    value: string;
-    description: string;
-  }>;
-  features?: Array<{
-    title: string;
-    description: string;
-  }>;
+  highlights?: Highlight[];
+  features?: Feature[];
   amenities?: string[];
   propertyTypes?: string[];
-  faqs?: Array<{
-    question: string;
-    answer: string;
-  }>;
+  faqs?: FAQ[];
   isPublished: boolean;
   createdAt: Date;
   updatedAt: Date;

@@ -89,7 +89,10 @@ export default function TaxCalculator() {
       },
       propertyDetails: {
         type: formData.propertyType
-      }
+      },
+      status: 'new',
+      createdAt: new Date(),
+      updatedAt: new Date()
     };
 
     try {

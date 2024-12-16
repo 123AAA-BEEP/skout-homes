@@ -1,28 +1,30 @@
 import clientPromise from '@/lib/mongodb';
 
-async function verifyConnection() {
+export async function verifyConnection() {
   try {
+    console.log('Verifying MongoDB connection...');
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB);
+    const dbName = process.env.MONGODB_DB || 'skout_homes';
     
-    // Test the connection
-    await db.command({ ping: 1 });
-    console.log("Successfully connected to MongoDB!");
+    // Check if we can get the database
+    const db = client.db(dbName);
+    console.log('Connected to database:', dbName);
     
-    // Get collection stats
-    const stats = await db.collection('areas').stats();
+    // Get collection stats using collStats command
+    const stats = await db.command({ collStats: 'areas' });
     console.log("Collection statistics:", {
       documentCount: stats.count,
       totalSize: stats.size,
-      avgDocSize: stats.avgObjSize
+      avgDocumentSize: stats.avgObjSize
     });
-    
-    // List indexes
-    const indexes = await db.collection('areas').indexes();
-    console.log("Collection indexes:", indexes);
-    
+
+    return {
+      success: true,
+      message: 'Database connection verified',
+      database: dbName
+    };
   } catch (error) {
-    console.error("Database connection error:", error);
+    console.error('Database connection error:', error);
     throw error;
   }
 }

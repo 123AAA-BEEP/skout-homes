@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import { Intent, IntentCategory } from '@/models/Intent';
 import clientPromise from '@/lib/mongodb';
 
@@ -84,7 +84,7 @@ export async function updateIntent(id: string, intentData: Partial<Intent>): Pro
   const result = await db
     .collection<Intent>(INTENTS_COLLECTION)
     .updateOne(
-      { _id: new MongoClient.ObjectId(id) },
+      { _id: new ObjectId(id) },
       { 
         $set: { 
           ...intentData,
@@ -101,7 +101,7 @@ export async function deleteIntent(id: string): Promise<boolean> {
   const db = await getDb();
   const result = await db
     .collection<Intent>(INTENTS_COLLECTION)
-    .deleteOne({ _id: new MongoClient.ObjectId(id) });
+    .deleteOne({ _id: new ObjectId(id) });
 
   return result.deletedCount > 0;
 } 

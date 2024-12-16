@@ -5,6 +5,7 @@ import { Area } from '@/models/Area';
 import { LeadForm } from '@/components/ui/LeadForm';
 import { FAQSection } from '@/components/FAQSection';
 import { AgentSearchSection } from '@/components/AgentSearchSection';
+import TrustIndicators from '@/components/home/TrustIndicators';
 
 interface IntentTemplateProps {
   area: Area;
@@ -41,6 +42,8 @@ export function IntentTemplate({ area, intent, seoData }: IntentTemplateProps) {
             area={area.name}
             intent="buy"
           />
+
+          <TrustIndicators />
         </div>
       );
 
@@ -71,6 +74,8 @@ export function IntentTemplate({ area, intent, seoData }: IntentTemplateProps) {
             area={area.name}
             intent="sell"
           />
+
+          <TrustIndicators />
         </div>
       );
 
@@ -101,6 +106,8 @@ export function IntentTemplate({ area, intent, seoData }: IntentTemplateProps) {
             area={area.name}
             intent="invest"
           />
+
+          <TrustIndicators />
         </div>
       );
 
@@ -133,6 +140,8 @@ export function IntentTemplate({ area, intent, seoData }: IntentTemplateProps) {
             faqs={area.faqs || []}
             area={area.name}
           />
+
+          <TrustIndicators />
         </div>
       );
   }

@@ -24,7 +24,7 @@ export function AgentSearchSection({ area, specialtyType, seoData }: AgentSearch
       </div>
 
       {/* Agent Specialties */}
-      {specialtyType && agentData.specialties?.[specialtyType] && (
+      {specialtyType && agentData?.specialties?.[specialtyType] && (
         <div className="bg-gray-50 p-6 rounded-lg">
           <h3 className="text-xl font-semibold mb-4">
             {agentData.specialties[specialtyType].type}
@@ -42,7 +42,7 @@ export function AgentSearchSection({ area, specialtyType, seoData }: AgentSearch
 
       {/* Agent Types Grid */}
       <div className="grid md:grid-cols-2 gap-6">
-        {Object.entries(agentData.transactionType || {}).map(([key, type]) => (
+        {Object.entries(agentData?.transactionType || {}).map(([key, type]) => (
           <div key={key} className="bg-white p-6 rounded-lg shadow-sm">
             <h3 className="font-semibold mb-2">{type.title}</h3>
             <p className="text-gray-600 mb-4">{type.description}</p>
@@ -57,7 +57,7 @@ export function AgentSearchSection({ area, specialtyType, seoData }: AgentSearch
       </div>
 
       {/* Languages Section */}
-      {agentData.languages && Object.keys(agentData.languages).length > 0 && (
+      {agentData?.languages && Object.keys(agentData.languages).length > 0 && (
         <div className="bg-gray-50 p-6 rounded-lg">
           <h3 className="text-xl font-semibold mb-4">Multilingual Agents</h3>
           <div className="grid md:grid-cols-3 gap-4">
@@ -76,7 +76,7 @@ export function AgentSearchSection({ area, specialtyType, seoData }: AgentSearch
       )}
 
       {/* Experience Levels */}
-      {agentData.experience && (
+      {agentData?.experience && (
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {Object.entries(agentData.experience).map(([key, exp]) => (
             <div key={key} className="bg-white p-6 rounded-lg shadow-sm">

@@ -28,13 +28,6 @@ const validCities = [
   'markham'
 ];
 
-// Generate static paths for all valid cities
-export async function generateStaticParams() {
-  return validCities.map((city) => ({
-    city: city.toLowerCase(),
-  }));
-}
-
 // Generate metadata for SEO
 export async function generateMetadata({ params }: CityPageProps): Promise<Metadata> {
   const cityName = decodeURIComponent(params.city).toLowerCase();

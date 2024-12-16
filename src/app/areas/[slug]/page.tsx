@@ -122,7 +122,7 @@ export default async function AreaPage({ params }: PageProps) {
         <section className="mb-12">
           <h2 className="text-3xl font-semibold mb-6">Neighborhood Highlights</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {areaData.highlights.map((highlight) => (
+            {areaData.highlights?.map((highlight) => (
               <div key={highlight.label} className="bg-white rounded-lg shadow-md p-6">
                 <div className="text-center mb-4">
                   <p className="text-2xl font-bold text-primary-600">{highlight.value}</p>
@@ -140,7 +140,7 @@ export default async function AreaPage({ params }: PageProps) {
         <section className="bg-white rounded-lg shadow-md p-8 mb-12">
           <h2 className="text-3xl font-semibold mb-6">About {areaData.name}</h2>
           <div className="prose max-w-none">
-            {areaData.features.map((feature, index) => (
+            {areaData.features?.map((feature, index) => (
               <div key={index} className="mb-8">
                 <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
                 <p className="text-gray-700">{feature.description}</p>
@@ -153,7 +153,7 @@ export default async function AreaPage({ params }: PageProps) {
         <section className="mb-12">
           <h2 className="text-3xl font-semibold mb-6">Local Amenities</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-            {areaData.amenities.map((amenity, index) => (
+            {areaData.amenities?.map((amenity, index) => (
               <div key={index} className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm">
                 <div className="w-10 h-10 flex items-center justify-center bg-primary-100 rounded-full">
                   <svg
@@ -183,7 +183,7 @@ export default async function AreaPage({ params }: PageProps) {
         <section className="mb-12">
           <h2 className="text-3xl font-semibold mb-6">Frequently Asked Questions</h2>
           <div className="space-y-6">
-            {areaData.faqs.map((faq, index) => (
+            {areaData.faqs?.map((faq, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-xl font-semibold mb-2">{faq.question}</h3>
                 <p className="text-gray-700">{faq.answer}</p>

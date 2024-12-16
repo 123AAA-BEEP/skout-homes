@@ -1,7 +1,32 @@
 import { ObjectId } from 'mongodb';
 import clientPromise from '@/lib/mongodb';
 import type { Lead } from '@/models/Lead';
-import { createDbError } from '@/types/errors';
+
+export interface DbError {
+  code: string;
+  message: string;
+  details?: {
+    error?: any;
+    errorCode?: string;
+  };
+}
+
+export function isDbError(error: any): error is DbError {
+  return (
+    error &&
+    typeof error === 'object' &&
+    'code' in error &&
+    'message' in error
+  );
+}
+
+export function createDbError(code: string, message: string, details?: any): DbError {
+  return {
+    code,
+    message,
+    details: typeof details === 'object' ? details : { error: details }
+  };
+}
 
 export async function getDb() {
   try {
@@ -27,15 +52,14 @@ export async function insertLead(lead: Omit<Lead, '_id'>) {
   } catch (error) {
     if (error instanceof Error && error.message.includes('duplicate key error')) {
       throw createDbError(
+        'DUPLICATE_EMAIL',
         'A lead with this email already exists',
-        'validation',
-        error,
-        'DUPLICATE_EMAIL'
+        { error, errorCode: 'validation' }
       );
     }
     throw createDbError(
+      'DB_ERROR',
       'Database operation failed',
-      'operation',
       error instanceof Error ? error : undefined
     );
   }
@@ -50,10 +74,9 @@ export async function getLeadById(id: string) {
     
     if (!lead) {
       throw createDbError(
+        'NOT_FOUND',
         'Lead not found',
-        'operation',
-        undefined,
-        'NOT_FOUND'
+        { errorCode: 'operation' }
       );
     }
     
@@ -85,19 +108,17 @@ export async function updateLeadStatus(id: string, status: Lead['status']) {
 
     if (result.matchedCount === 0) {
       throw createDbError(
+        'NOT_FOUND',
         'Lead not found',
-        'operation',
-        undefined,
-        'NOT_FOUND'
+        { errorCode: 'operation' }
       );
     }
 
     if (result.modifiedCount === 0) {
       throw createDbError(
+        'NOT_MODIFIED',
         'Lead status not updated',
-        'operation',
-        undefined,
-        'NOT_MODIFIED'
+        { errorCode: 'operation' }
       );
     }
 

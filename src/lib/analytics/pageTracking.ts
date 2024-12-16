@@ -90,7 +90,19 @@ export async function getTopPerformingPages(options: {
       .limit(options.limit || 10)
       .toArray();
       
-    return results as PagePerformance[];
+    return results.map(result => ({
+      path: result.path,
+      views: result.views,
+      uniqueViews: result.uniqueViews,
+      avgTimeOnPage: result.avgTimeOnPage,
+      bounceRate: result.bounceRate,
+      lastUpdated: result.lastUpdated,
+      city: result.city,
+      neighborhood: result.neighborhood,
+      propertyType: result.propertyType,
+      intent: result.intent,
+      serviceType: result.serviceType
+    }));
   } catch (error) {
     console.error('Failed to get top performing pages:', error);
     return [];

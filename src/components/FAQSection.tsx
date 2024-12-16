@@ -9,17 +9,23 @@ interface FAQ {
 
 interface FAQSectionProps {
   faqs: FAQ[];
+  area?: string;
+  intent?: string;
   className?: string;
 }
 
-export function FAQSection({ faqs, className = '' }: FAQSectionProps) {
+export function FAQSection({ faqs, area, intent, className = '' }: FAQSectionProps) {
   if (!faqs || faqs.length === 0) return null;
+
+  const title = intent 
+    ? `Frequently Asked Questions About ${intent === 'buy' ? 'Buying' : intent === 'sell' ? 'Selling' : 'Real Estate'} in ${area}`
+    : 'Frequently Asked Questions';
 
   return (
     <section className={`py-12 ${className}`}>
       <div className="max-w-4xl mx-auto">
         <h2 className="text-2xl font-semibold mb-8">
-          Frequently Asked Questions
+          {title}
         </h2>
         
         <div className="space-y-6">
