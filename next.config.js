@@ -40,11 +40,7 @@ const nextConfig = {
   // Improved build optimization
   swcMinify: true,
   reactStrictMode: true,
-  poweredByHeader: false,
-  // Force TLS 1.2
-  env: {
-    NODE_OPTIONS: '--tls-min-v1.2'
-  }
+  poweredByHeader: false
 }
 
 module.exports = nextConfig 

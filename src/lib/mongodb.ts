@@ -12,7 +12,11 @@ const options: MongoClientOptions = {
     version: '1',
     strict: true,
     deprecationErrors: true
-  }
+  },
+  directConnection: process.env.MONGODB_DIRECT_CONNECTION === 'true',
+  ssl: true,
+  tls: true,
+  tlsInsecure: false
 };
 
 // Global MongoDB client promise
