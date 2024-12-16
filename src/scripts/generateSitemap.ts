@@ -1,7 +1,5 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import clientPromise from '@/lib/mongodb';
-import { Area } from '@/models/Area';
 
 interface SitemapUrl {
   loc: string;
@@ -12,15 +10,7 @@ interface SitemapUrl {
 
 async function generateSitemap() {
   try {
-    const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB);
-
-    // Get all areas
-    const areas = await db.collection<Area>('areas')
-      .find({ isPublished: true })
-      .toArray();
-
-    const baseUrl = 'https://yourdomain.com'; // Replace with your domain
+    const baseUrl = 'https://skouthomes.com'; // Your production domain
     const urls: SitemapUrl[] = [];
 
     // Add static pages
@@ -30,41 +20,6 @@ async function generateSitemap() {
       { loc: `${baseUrl}/tools/home-value-estimator`, priority: 0.8, changefreq: 'weekly' },
       { loc: `${baseUrl}/tools/land-transfer-tax-calculator`, priority: 0.8, changefreq: 'weekly' }
     );
-
-    // Add area pages
-    for (const area of areas) {
-      const baseAreaUrl = `${baseUrl}/${area.urlStructure.city}/${area.urlStructure.neighborhood}`;
-      
-      // Basic area page
-      urls.push({
-        loc: baseAreaUrl,
-        lastmod: area.updatedAt.toISOString(),
-        priority: 0.8,
-        changefreq: 'weekly'
-      });
-
-      // Intent-based pages
-      ['buying', 'selling', 'investing', 'renting'].forEach(intent => {
-        urls.push({
-          loc: `${baseAreaUrl}/${intent}`,
-          lastmod: area.updatedAt.toISOString(),
-          priority: 0.7,
-          changefreq: 'weekly'
-        });
-      });
-
-      // Property type pages
-      ['house', 'condo', 'townhouse'].forEach(propertyType => {
-        ['buying', 'selling', 'investing', 'renting'].forEach(intent => {
-          urls.push({
-            loc: `${baseAreaUrl}/${propertyType}/${intent}`,
-            lastmod: area.updatedAt.toISOString(),
-            priority: 0.6,
-            changefreq: 'weekly'
-          });
-        });
-      });
-    }
 
     // Generate sitemap XML
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

@@ -5,9 +5,10 @@ Allow: /
 # Disallow admin and api routes
 Disallow: /admin/*
 Disallow: /api/*
+Allow: /api/sitemap
 
 # Sitemap location
-Sitemap: https://your-domain.com/sitemap.xml
+Sitemap: https://skouthomes.com/api/sitemap
 
 # Crawl-delay
 Crawl-delay: 10 

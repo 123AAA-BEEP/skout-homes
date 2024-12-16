@@ -1,13 +1,13 @@
 {
   "scripts": {
     "dev": "next dev",
-    "build": "npm run generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "generate:urls": "ts-node src/scripts/generateUrlCombinations.ts",
     "migrate:areas": "NODE_OPTIONS='--experimental-specifier-resolution=node --loader ts-node/esm' ts-node src/scripts/migrateAreas.ts",
     "test:mongo": "node src/scripts/testMongo.js",
     "test:urls": "node --experimental-json-modules scripts/testUrls.mjs",
-    "generate": "ts-node src/scripts/generateUrlCombinations.ts && ts-node src/scripts/generateSitemap.ts",
     "setup:db": "node src/scripts/setupDb.mjs",
     "verify:areas": "node --experimental-json-modules src/scripts/verifyAreaData.mjs",
     "fix:intents": "node --experimental-json-modules src/scripts/addMissingIntents.mjs",
@@ -26,12 +26,9 @@
     "next": "14.1.0",
     "next-link": "^2.0.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tsconfig-paths": "^4.2.0"
   },
-  "name": "pseo-r.e-1-",
-  "version": "1.0.0",
-  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
-  "main": "next.config.js",
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.9",
     "@types/fs-extra": "^11.0.4",
@@ -47,14 +44,11 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },
+  "name": "pseo-r.e-1-",
+  "version": "1.0.0",
+  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "main": "next.config.js",
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
-    }
-  }
+  "license": "ISC"
 }
