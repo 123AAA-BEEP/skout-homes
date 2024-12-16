@@ -52,7 +52,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  let session = null;
+  try {
+    session = await getServerSession(authOptions);
+  } catch (error) {
+    console.error('Failed to get session:', error);
+  }
 
   return (
     <html lang="en">
@@ -66,7 +71,7 @@ export default async function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <body className="font-sans antialiased">
-        <SessionProvider session={session || null}>
+        <SessionProvider session={session}>
           <Header />
           <main className="flex-grow">
             {children}

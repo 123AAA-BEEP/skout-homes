@@ -10,6 +10,10 @@ import { LocalTrustIndicators } from '@/components/LocalTrustIndicators';
 import { FAQSection } from '@/components/FAQSection';
 import PageHero from '@/components/ui/PageHero';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface NeighbourhoodPageProps {
   params: {
     city: string;

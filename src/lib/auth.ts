@@ -7,6 +7,11 @@ interface CustomUser extends User {
 }
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -35,6 +40,7 @@ export const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: '/admin/login',
+    error: '/admin/login',
   },
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: CustomUser }) {
