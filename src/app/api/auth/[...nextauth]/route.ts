@@ -1,7 +1,12 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions, User, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { JWT } from "next-auth/jwt";
 
-const handler = NextAuth({
+interface CustomUser extends User {
+  role?: string;
+}
+
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -9,7 +14,7 @@ const handler = NextAuth({
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<CustomUser | null> {
         if (!credentials?.username || !credentials?.password) return null;
         
         // Check against environment variables
@@ -32,19 +37,20 @@ const handler = NextAuth({
     signIn: '/admin/login',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user?: CustomUser }) {
       if (user) {
         token.role = user.role;
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (session?.user) {
-        (session.user as any).role = token.role;
+        (session.user as CustomUser).role = token.role as string;
       }
       return session;
     }
   }
-});
+};
 
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST }; 
