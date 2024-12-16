@@ -32,8 +32,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const area = await getAreaBySlug(params.slug);
   if (!area) return {};
 
-  const title = area.seoMetadata?.title || `${area.name} Real Estate | Expert Local Agents`;
-  const description = area.seoMetadata?.description || 
+  const title = area.seo?.title || `${area.name} Real Estate | Expert Local Agents`;
+  const description = area.seo?.description || 
     `Find top real estate agents in ${area.name}. Get expert guidance, local market insights, and free consultation. Discover ${area.name} properties today.`;
 
   return {
