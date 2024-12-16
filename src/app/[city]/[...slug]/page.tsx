@@ -46,10 +46,17 @@ function extractUrlParams(slug: string[]): {
 function getSeoData(area: Area, intent?: string, propertyType?: string, subIntent?: string): any {
   if (!intent) return area.seo;
   
-  const intentData = area.seo.intents[intent];
-  if (!intentData) return area.seo;
-
-  return intentData;
+  // Type assertion to ensure intent is a valid key
+  const validIntents = ['buy', 'sell', 'invest', 'rent', 'agents'] as const;
+  type ValidIntent = typeof validIntents[number];
+  
+  if (validIntents.includes(intent as ValidIntent)) {
+    const intentData = area.seo.intents[intent as ValidIntent];
+    if (!intentData) return area.seo;
+    return intentData;
+  }
+  
+  return area.seo;
 }
 
 // Generate metadata for SEO
