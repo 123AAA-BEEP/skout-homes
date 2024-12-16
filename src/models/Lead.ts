@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 
 export interface Lead {
-  _id?: string;
+  _id?: ObjectId;
   name: string;
   email: string;
   phone?: string;
