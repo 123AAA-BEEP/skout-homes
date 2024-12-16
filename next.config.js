@@ -41,6 +41,10 @@ const nextConfig = {
   swcMinify: true,
   reactStrictMode: true,
   poweredByHeader: false,
+  // Force TLS 1.2
+  env: {
+    NODE_OPTIONS: '--tls-min-v1.2'
+  }
 }
 
 module.exports = nextConfig 

@@ -1,6 +1,6 @@
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
-const uri = process.env.MONGODB_URI || 'mongodb+srv://skouthomes2:2025Email@cluster1skout.utctq.mongodb.net/skout_homes?retryWrites=true&w=majority';
+const uri = process.env.MONGODB_URI || 'mongodb+srv://skouthomes2:2025Email@cluster1skout.utctq.mongodb.net/skout_homes?retryWrites=true&w=majority&ssl=true';
 const dbName = process.env.MONGODB_DB || 'skout_homes';
 
 if (!uri) {
@@ -12,11 +12,7 @@ const options: MongoClientOptions = {
     version: '1',
     strict: true,
     deprecationErrors: true
-  },
-  tls: true,
-  tlsInsecure: false,
-  minTlsVersion: process.env.MONGODB_TLS_VERSION || 'TLS1_2',
-  maxTlsVersion: 'TLS1_3'
+  }
 };
 
 // Global MongoDB client promise
