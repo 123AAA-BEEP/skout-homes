@@ -15,7 +15,17 @@ const options: MongoClientOptions = {
     w: 'majority'
   },
   connectTimeoutMS: 10000,
-  socketTimeoutMS: 45000
+  socketTimeoutMS: 45000,
+  ssl: true,
+  tls: true,
+  tlsAllowInvalidCertificates: false,
+  tlsAllowInvalidHostnames: false,
+  tlsCAFile: undefined,
+  serverApi: {
+    version: '1',
+    strict: true,
+    deprecationErrors: true
+  }
 };
 
 // Global MongoDB client promise
