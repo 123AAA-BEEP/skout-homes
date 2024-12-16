@@ -14,7 +14,6 @@ const options: MongoClientOptions = {
   ssl: true,
   tls: true,
   tlsAllowInvalidCertificates: true,
-  tlsInsecure: true,
   directConnection: false,
   retryWrites: true,
   maxPoolSize: 10,
