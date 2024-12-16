@@ -21,6 +21,7 @@ export interface SeoContent {
   urlPatterns: {
     [key: string]: string;  // Dynamic URL patterns
   };
+  structuredData?: Record<string, any>;
 }
 
 // Intent-specific SEO content
@@ -60,6 +61,7 @@ export interface Area {
     urlPatterns: {
       [key: string]: string;
     };
+    structuredData?: Record<string, any>;
   };
   highlights?: Array<{
     label: string;
