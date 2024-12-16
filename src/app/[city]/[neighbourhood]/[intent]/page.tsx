@@ -94,7 +94,10 @@ function generateIntentFAQs(intent: string, cityName: string, neighbourhoodName:
       : 'various property types';
   };
 
-  const intentKeywords: Record<string, string> = {
+  type IntentType = 'buying' | 'selling' | 'realtor' | 'evaluation' | 'market';
+  type FAQ = { question: string; answer: string; };
+
+  const intentKeywords: Record<string, IntentType> = {
     'buy-house': 'buying',
     'sell-house': 'selling',
     'real-estate-agent': 'realtor',
@@ -105,7 +108,7 @@ function generateIntentFAQs(intent: string, cityName: string, neighbourhoodName:
   const intentType = intentKeywords[intent] || 'buying';
 
   // Enhanced common FAQs with more specific data
-  const commonFAQs = [
+  const commonFAQs: FAQ[] = [
     {
       question: `What makes ${areaDisplayName} a desirable place to live?`,
       answer: `${areaDisplayName} is highly sought-after for its ${getFeatureBasedContent()}.${getHighlightContent()} This combination makes it an attractive choice for both families and professionals looking for a great place to call home.`
@@ -117,7 +120,7 @@ function generateIntentFAQs(intent: string, cityName: string, neighbourhoodName:
   ];
 
   // Enhanced intent-specific FAQs with more detailed content
-  const intentSpecificFAQs = {
+  const intentSpecificFAQs: Record<IntentType, FAQ[]> = {
     buying: [
       {
         question: `What types of homes can I find in ${areaDisplayName}?`,
@@ -280,12 +283,12 @@ export default async function IntentPage({ params }: IntentPageProps) {
 } 
 
 // Helper functions to generate appropriate titles based on intent
-function getIntentTitle(intent: string, neighbourhood: string) {
-  // Customize based on your intent types
-  return `${intent.split('-').join(' ').toUpperCase()} in ${neighbourhood}`
+function getIntentTitle(intent: string, neighbourhood: string): string {
+  const formattedIntent = intent.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  return `${formattedIntent} in ${neighbourhood}`;
 }
 
-function getIntentSubtitle(intent: string, neighbourhood: string, city: string) {
-  // Customize based on your intent types
-  return `Connect with experienced agents specializing in ${neighbourhood}, ${city}`
+function getIntentSubtitle(intent: string, neighbourhood: string, city: string): string {
+  const cityName = city.charAt(0).toUpperCase() + city.slice(1);
+  return `Connect with experienced agents specializing in ${neighbourhood}, ${cityName}`;
 } 
