@@ -1,5 +1,15 @@
 import { ObjectId } from 'mongodb';
 
+export interface IntentCategory {
+  _id?: ObjectId;
+  name: string;
+  slug: string;
+  description: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface Intent {
   _id?: ObjectId;
   keywords: string[];
