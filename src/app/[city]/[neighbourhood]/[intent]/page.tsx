@@ -94,7 +94,7 @@ function generateIntentFAQs(intent: string, cityName: string, neighbourhoodName:
       : 'various property types';
   };
 
-  const intentKeywords = {
+  const intentKeywords: Record<string, string> = {
     'buy-house': 'buying',
     'sell-house': 'selling',
     'real-estate-agent': 'realtor',
