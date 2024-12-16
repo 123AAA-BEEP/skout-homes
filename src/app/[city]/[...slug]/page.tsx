@@ -84,7 +84,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: seoData.description,
       images: [area.imageUrl],
     },
-    canonical: seoData.canonicalUrl,
+    alternates: {
+      canonical: seoData.canonicalUrl,
+    },
   };
 }
 
