@@ -1,6 +1,6 @@
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
-const uri = process.env.MONGODB_URI || 'mongodb+srv://skouthomes2:2025Email@cluster1skout.utctq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1skout&authSource=admin&ssl=true&tls=true&tlsAllowInvalidCertificates=false&serverSelectionTimeoutMS=30000';
+const uri = process.env.MONGODB_URI || 'mongodb+srv://skouthomes2:2025Email@cluster1skout.utctq.mongodb.net/skout_homes?retryWrites=true&w=majority';
 const dbName = process.env.MONGODB_DB || 'skout_homes';
 
 if (!uri) {
@@ -8,10 +8,6 @@ if (!uri) {
 }
 
 const options: MongoClientOptions = {
-  maxPoolSize: 10,
-  minPoolSize: 5,
-  connectTimeoutMS: 30000,
-  socketTimeoutMS: 45000,
   serverApi: {
     version: '1',
     strict: true,
