@@ -11,13 +11,11 @@ const options: MongoClientOptions = {
     strict: true,
     deprecationErrors: true
   },
-  tls: true,
-  tlsAllowInvalidCertificates: false,
   retryWrites: true,
-  maxPoolSize: 1,
+  maxPoolSize: 10,
   minPoolSize: 1,
-  connectTimeoutMS: 10000,
-  socketTimeoutMS: 10000
+  connectTimeoutMS: 30000,
+  socketTimeoutMS: 30000
 };
 
 let client: MongoClient;
