@@ -1,12 +1,14 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { headers } from "next/headers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Script from 'next/script';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: {
@@ -53,10 +55,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   let session = null;
-  try {
-    session = await getServerSession(authOptions);
-  } catch (error) {
-    console.error('Failed to get session:', error);
+  
+  // Only try to get session if not in build time
+  if (process.env.NODE_ENV !== 'production' || process.env.VERCEL_ENV !== 'production') {
+    try {
+      session = await getServerSession(authOptions);
+    } catch (error) {
+      console.error('Failed to get session:', error);
+    }
   }
 
   return (
@@ -113,4 +119,4 @@ export default async function RootLayout({
       </body>
     </html>
   );
-} 
+}
