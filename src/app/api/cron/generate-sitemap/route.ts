@@ -3,6 +3,8 @@ import { headers } from 'next/headers';
 import clientPromise from '@/lib/mongodb';
 import { Area } from '@/models/Area';
 
+export const dynamic = 'force-dynamic';
+
 // All possible intent keywords organized by category
 const intentKeywords = {
   directAgentSearch: [
