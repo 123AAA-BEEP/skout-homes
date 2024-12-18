@@ -52,11 +52,14 @@ export async function GET() {
     const headersList = headers();
     const cronSecret = headersList.get('x-cron-secret');
     
-    console.log('Received cron secret:', cronSecret ? 'present' : 'missing');
-    console.log('Environment CRON_SECRET:', process.env.CRON_SECRET ? 'present' : 'missing');
+    console.log('🔐 Auth check:', {
+      receivedSecret: cronSecret ? 'present' : 'missing',
+      envSecret: process.env.CRON_SECRET ? 'present' : 'missing',
+      headers: Object.fromEntries(headersList.entries())
+    });
     
     if (!process.env.CRON_SECRET || cronSecret !== process.env.CRON_SECRET) {
-      console.error('Authentication failed:', {
+      console.error('🚫 Authentication failed:', {
         hasCronSecret: !!process.env.CRON_SECRET,
         headerPresent: !!cronSecret,
         matches: cronSecret === process.env.CRON_SECRET
@@ -64,7 +67,7 @@ export async function GET() {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    console.log('Starting sitemap generation...');
+    console.log('🚀 Starting sitemap generation...');
     const baseUrl = 'https://skouthomes.com';
     const urls = [];
     const today = new Date().toISOString().split('T')[0];
@@ -172,12 +175,19 @@ ${urls.map(url => `  <url>
     console.log(`- Intent keywords: ${allIntentKeywords.length}`);
 
     // Return the sitemap directly as XML
-    return new NextResponse(sitemap, {
+    const response = new NextResponse(sitemap, {
       headers: {
         'Content-Type': 'application/xml',
         'Cache-Control': 'public, max-age=3600'
       }
     });
+
+    console.log('✅ Returning response:', {
+      contentLength: sitemap.length,
+      firstFewChars: sitemap.substring(0, 200)
+    });
+
+    return response;
   } catch (error: any) { // Type assertion to handle error properties
     console.error('Detailed error:', {
       name: error.name,

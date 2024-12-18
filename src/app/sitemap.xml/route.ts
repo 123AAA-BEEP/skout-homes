@@ -11,10 +11,12 @@ export async function GET() {
     const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
     const baseUrl = `${protocol}://${host}`;
 
-    console.log('Fetching sitemap from:', `${baseUrl}/api/cron/generate-sitemap`);
-    console.log('Environment:', {
+    console.log('🚀 Starting sitemap request');
+    console.log('📍 URL:', `${baseUrl}/api/cron/generate-sitemap`);
+    console.log('🔑 Environment:', {
       NODE_ENV: process.env.NODE_ENV,
-      hasCronSecret: !!process.env.CRON_SECRET
+      hasCronSecret: !!process.env.CRON_SECRET,
+      host: host
     });
 
     // Call the cron endpoint with the secret
@@ -24,9 +26,12 @@ export async function GET() {
       }
     });
 
+    console.log('📥 Response status:', response.status);
+    console.log('📥 Response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Failed to fetch sitemap:', {
+      console.error('❌ Failed to fetch sitemap:', {
         status: response.status,
         statusText: response.statusText,
         error: errorText
@@ -35,7 +40,8 @@ export async function GET() {
     }
 
     const sitemap = await response.text();
-    console.log('Successfully generated sitemap');
+    console.log('✅ Received sitemap content length:', sitemap.length);
+    console.log('📄 First 500 characters:', sitemap.substring(0, 500));
 
     // Return the sitemap with proper XML content type
     return new NextResponse(sitemap, {
@@ -45,7 +51,7 @@ export async function GET() {
       }
     });
   } catch (error: any) {
-    console.error('Error serving sitemap:', {
+    console.error('❌ Error serving sitemap:', {
       message: error.message,
       stack: error.stack,
       name: error.name
