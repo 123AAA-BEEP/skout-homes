@@ -1,117 +1,147 @@
 import { NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
+import { headers } from 'next/headers';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 import clientPromise from '@/lib/mongodb';
 import { Area } from '@/models/Area';
 
-interface SitemapUrl {
-  loc: string;
-  lastmod?: string;
-  changefreq?: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
-  priority?: number;
-}
+// All possible intent keywords organized by category
+const intentKeywords = {
+  directAgentSearch: [
+    'real-estate-agent', 'realtor', 'top-realtor', 'best-realtor', 'experienced-realtor',
+    'local-realtor', 'trusted-realtor', 'recommended-realtor', 'top-rated-agent',
+    'best-real-estate-agent', 'experienced-agent', 'local-agent', 'trusted-agent',
+    'recommended-agent'
+  ],
+  transactionSpecific: [
+    'selling-agent', 'listing-agent', 'sellers-realtor', 'home-selling-agent',
+    'buying-agent', 'buyers-agent', 'buyers-realtor', 'home-buying-agent',
+    'first-time-buyer-agent', 'luxury-home-realtor', 'investment-property-agent',
+    'condo-specialist', 'house-specialist', 'townhouse-specialist'
+  ],
+  specialtyAgent: [
+    'multilingual-realtor', 'chinese-speaking-realtor', 'mandarin-speaking-agent',
+    'cantonese-speaking-agent', 'farsi-speaking-realtor', 'persian-speaking-agent',
+    'hindi-speaking-agent', 'punjabi-speaking-agent', 'urdu-speaking-agent'
+  ],
+  serviceSpecific: [
+    'free-home-evaluation', 'free-house-valuation', 'property-value-estimate',
+    'what-is-my-home-worth', 'sell-my-house', 'sell-my-home', 'list-my-house',
+    'list-my-property', 'help-selling-house', 'help-buying-house',
+    'find-realtor-to-sell', 'find-realtor-to-buy'
+  ],
+  expertAdvisory: [
+    'real-estate-consultation', 'real-estate-advice', 'housing-market-expert',
+    'property-selling-expert', 'home-buying-expert', 'real-estate-specialist',
+    'market-value-expert', 'neighbourhood-expert', 'local-market-expert'
+  ],
+  propertySpecific: [
+    'luxury-home-specialist', 'waterfront-property-agent', 'condo-expert-realtor',
+    'townhouse-specialist', 'investment-property-realtor', 'commercial-real-estate-agent',
+    'pre-construction-specialist', 'new-build-expert', 'heritage-home-specialist',
+    'fixer-upper-expert'
+  ]
+};
 
-// Protect the route with a secret token
-const CRON_SECRET = process.env.CRON_SECRET;
+// Flatten all intent keywords into a single array
+const allIntentKeywords = Object.values(intentKeywords).flat();
 
-const validCities = [
-  'toronto',
-  'mississauga',
-  'vaughan',
-  'oakville',
-  'brampton',
-  'milton',
-  'burlington',
-  'markham'
-] as const;
-
-const validIntents = [
-  'homes-for-sale',
-  'sell-your-home',
-  'investment-properties',
-  'homes-for-rent',
-  'real-estate-agents'
-] as const;
-
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    // Verify the secret token
-    const { searchParams } = new URL(request.url);
-    const token = searchParams.get('token');
+    // Verify cron secret
+    const headersList = headers();
+    const cronSecret = headersList.get('x-cron-secret');
     
-    if (!CRON_SECRET || token !== CRON_SECRET) {
+    if (!process.env.CRON_SECRET || cronSecret !== process.env.CRON_SECRET) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
     console.log('Starting sitemap generation...');
-    const baseUrl = process.env.NEXTAUTH_URL || 'https://skouthomes.com';
-    const urls: SitemapUrl[] = [];
+    const baseUrl = 'https://skouthomes.com';
+    const urls = [];
+    const today = new Date().toISOString().split('T')[0];
+    let urlCount = 0;
 
     // Add static pages
-    urls.push(
-      { loc: baseUrl, priority: 1.0, changefreq: 'daily' },
-      { loc: `${baseUrl}/find-realtor`, priority: 0.9, changefreq: 'daily' },
-      { loc: `${baseUrl}/tools/home-value-estimator`, priority: 0.8, changefreq: 'weekly' },
-      { loc: `${baseUrl}/tools/land-transfer-tax-calculator`, priority: 0.8, changefreq: 'weekly' }
-    );
+    const staticPages = [
+      { path: '', priority: 1.0 },
+      { path: 'find-realtor', priority: 0.9 },
+      { path: 'tools/home-value-estimator', priority: 0.8 },
+      { path: 'tools/land-transfer-tax-calculator', priority: 0.8 }
+    ];
 
-    // Add city pages
-    validCities.forEach(city => {
+    staticPages.forEach(page => {
       urls.push({
-        loc: `${baseUrl}/${city}`,
-        priority: 0.9,
-        changefreq: 'daily'
+        loc: `${baseUrl}/${page.path}`,
+        priority: page.priority,
+        changefreq: 'daily',
+        lastmod: today
       });
+      urlCount++;
     });
+    console.log(`Added ${staticPages.length} static pages`);
 
-    // Get dynamic pages from MongoDB
+    // Connect to MongoDB
+    console.log('Connecting to MongoDB...');
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_DB);
+
+    // Get all published areas
+    console.log('Fetching published areas...');
     const areas = await db.collection<Area>('areas')
       .find({ isPublished: true })
       .toArray();
+    console.log(`Found ${areas.length} published areas`);
 
-    // Add area pages with all possible combinations
+    // Get unique cities
+    const cities = Array.from(new Set(areas.map(area => area.urlStructure.city)));
+    console.log(`Found ${cities.length} unique cities`);
+
+    // Add city pages
+    cities.forEach(city => {
+      urls.push({
+        loc: `${baseUrl}/${city.toLowerCase()}`,
+        priority: 0.9,
+        changefreq: 'daily',
+        lastmod: today
+      });
+      urlCount++;
+    });
+
+    // Process each area
     for (const area of areas) {
-      if (!area.urlStructure?.city || !area.urlStructure?.neighborhood) {
+      const { city, neighborhood } = area.urlStructure;
+      if (!city || !neighborhood) {
         console.warn(`Skipping area ${area._id} due to missing URL structure`);
         continue;
       }
 
-      const baseAreaUrl = `${baseUrl}/${area.urlStructure.city}/${area.urlStructure.neighborhood}`;
+      const baseAreaUrl = `${baseUrl}/${city.toLowerCase()}/${neighborhood.toLowerCase()}`;
       
-      // Main area page
+      // Add main area page
       urls.push({
         loc: baseAreaUrl,
-        lastmod: area.updatedAt?.toISOString() || new Date().toISOString(),
         priority: 0.8,
-        changefreq: 'daily'
+        changefreq: 'daily',
+        lastmod: area.updatedAt?.toISOString().split('T')[0] || today
       });
+      urlCount++;
 
-      // Add intent pages
-      validIntents.forEach(intent => {
+      // Add all intent-based pages
+      allIntentKeywords.forEach(intent => {
         urls.push({
           loc: `${baseAreaUrl}/${intent}`,
-          lastmod: area.updatedAt?.toISOString() || new Date().toISOString(),
           priority: 0.7,
-          changefreq: 'daily'
+          changefreq: 'daily',
+          lastmod: area.updatedAt?.toISOString().split('T')[0] || today
         });
+        urlCount++;
       });
-
-      // Add property type variations
-      if (area.propertyTypes && area.propertyTypes.length > 0) {
-        area.propertyTypes.forEach(propertyType => {
-          urls.push({
-            loc: `${baseAreaUrl}/homes-for-sale/${propertyType.toLowerCase().replace(/\s+/g, '-')}`,
-            lastmod: area.updatedAt?.toISOString() || new Date().toISOString(),
-            priority: 0.6,
-            changefreq: 'weekly'
-          });
-        });
-      }
     }
 
-    // Generate sitemap XML
+    console.log(`Generated ${urlCount} total URLs`);
+
+    // Generate sitemap XML with XSL styling
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -126,26 +156,21 @@ ${urls.map(url => `  <url>
   </url>`).join('\n')}
 </urlset>`;
 
-    // Write sitemap to public directory
-    const publicPath = join(process.cwd(), 'public', 'sitemap.xml');
-    await writeFile(publicPath, sitemap);
+    // Write sitemap file
+    const publicDir = path.join(process.cwd(), 'public');
+    await fs.mkdir(publicDir, { recursive: true });
+    await fs.writeFile(path.join(publicDir, 'sitemap.xml'), sitemap);
 
-    return new NextResponse(JSON.stringify({
-      success: true,
-      message: `Sitemap generated with ${urls.length} URLs`,
-      timestamp: new Date().toISOString()
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    console.log('✅ Sitemap generated successfully');
+    console.log(`📊 Statistics:`);
+    console.log(`- Total URLs: ${urlCount}`);
+    console.log(`- Cities: ${cities.length}`);
+    console.log(`- Areas: ${areas.length}`);
+    console.log(`- Intent keywords: ${allIntentKeywords.length}`);
 
-  } catch (error: any) {
-    console.error('Sitemap Generation Error:', error);
-    return new NextResponse(JSON.stringify({
-      success: false,
-      error: error.message || 'Unknown error occurred'
-    }), { 
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return new NextResponse('Sitemap generated successfully', { status: 200 });
+  } catch (error) {
+    console.error('Error generating sitemap:', error);
+    return new NextResponse('Error generating sitemap', { status: 500 });
   }
 } 
