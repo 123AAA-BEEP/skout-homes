@@ -1,0 +1,6 @@
+{
+  "crons": [{
+    "path": "/api/cron/generate-sitemap?token=edoinewd209wjedc09ewcm",
+    "schedule": "0 0 * * *"
+  }]
+} 
