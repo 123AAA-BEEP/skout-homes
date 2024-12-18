@@ -1,12 +1,19 @@
 import { NextResponse } from 'next/server';
-import * as fs from 'fs/promises';
-import * as path from 'path';
 
 export async function GET() {
   try {
-    // Read the sitemap file from the public directory
-    const publicDir = path.join(process.cwd(), 'public');
-    const sitemap = await fs.readFile(path.join(publicDir, 'sitemap.xml'), 'utf-8');
+    // Call the cron endpoint with the secret
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/cron/generate-sitemap`, {
+      headers: {
+        'x-cron-secret': process.env.CRON_SECRET || ''
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to generate sitemap: ${response.statusText}`);
+    }
+
+    const sitemap = await response.text();
 
     // Return the sitemap with proper XML content type
     return new NextResponse(sitemap, {

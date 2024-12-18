@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-import * as fs from 'fs/promises';
-import * as path from 'path';
 import clientPromise from '@/lib/mongodb';
 import { Area } from '@/models/Area';
 
@@ -52,7 +50,15 @@ export async function GET() {
     const headersList = headers();
     const cronSecret = headersList.get('x-cron-secret');
     
+    console.log('Received cron secret:', cronSecret ? 'present' : 'missing');
+    console.log('Environment CRON_SECRET:', process.env.CRON_SECRET ? 'present' : 'missing');
+    
     if (!process.env.CRON_SECRET || cronSecret !== process.env.CRON_SECRET) {
+      console.error('Authentication failed:', {
+        hasCronSecret: !!process.env.CRON_SECRET,
+        headerPresent: !!cronSecret,
+        matches: cronSecret === process.env.CRON_SECRET
+      });
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
@@ -156,11 +162,6 @@ ${urls.map(url => `  <url>
   </url>`).join('\n')}
 </urlset>`;
 
-    // Write sitemap file
-    const publicDir = path.join(process.cwd(), 'public');
-    await fs.mkdir(publicDir, { recursive: true });
-    await fs.writeFile(path.join(publicDir, 'sitemap.xml'), sitemap);
-
     console.log('✅ Sitemap generated successfully');
     console.log(`📊 Statistics:`);
     console.log(`- Total URLs: ${urlCount}`);
@@ -168,9 +169,20 @@ ${urls.map(url => `  <url>
     console.log(`- Areas: ${areas.length}`);
     console.log(`- Intent keywords: ${allIntentKeywords.length}`);
 
-    return new NextResponse('Sitemap generated successfully', { status: 200 });
-  } catch (error) {
-    console.error('Error generating sitemap:', error);
-    return new NextResponse('Error generating sitemap', { status: 500 });
+    // Return the sitemap directly as XML
+    return new NextResponse(sitemap, {
+      headers: {
+        'Content-Type': 'application/xml',
+        'Cache-Control': 'public, max-age=3600'
+      }
+    });
+  } catch (error: any) { // Type assertion to handle error properties
+    console.error('Detailed error:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+      phase: 'sitemap generation'
+    });
+    return new NextResponse(`Error generating sitemap: ${error.message}`, { status: 500 });
   }
 } 
