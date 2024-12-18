@@ -99,7 +99,7 @@ export async function GET(request: Request) {
       });
 
       // Add property type variations
-      if (area.propertyTypes?.length > 0) {
+      if (area.propertyTypes && area.propertyTypes.length > 0) {
         area.propertyTypes.forEach(propertyType => {
           urls.push({
             loc: `${baseAreaUrl}/homes-for-sale/${propertyType.toLowerCase().replace(/\s+/g, '-')}`,
